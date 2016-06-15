@@ -47,5 +47,5 @@ WebUploader是一个简单的以HTML5为主，FLASH为辅的现代文件上传�
 
 采用AMD规范组织代码，清晰明了，方便高级玩家扩展。
 
-
+### Update
 
