@@ -2332,6 +2332,7 @@
                 });
                 image.once( 'error', deferred.reject );
                 image.once( 'load', function() {
+                    
                     var width = opts.width,
                         height = opts.height;
     
