@@ -62,7 +62,7 @@ define([
 
             changeHandler = function (e) {
                 //
-                var clone, fn = arguments.callee;
+                var clone;
 
                 // 解决chrome 56 第二次打开文件选择器，然后点击取消，依然会触发change事件的问题
                 if (e.target.files.length === 0) {
@@ -79,7 +79,7 @@ define([
                 this.parentNode.replaceChild(clone, this);
 
                 input.off();
-                input = $(clone).on('change', fn)
+                input = $(clone).on('change', changeHandler)
                     .on('mouseenter mouseleave', mouseHandler);
 
                 owner.trigger('change');
