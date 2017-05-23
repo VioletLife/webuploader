@@ -2560,7 +2560,7 @@ module.exports = (function( root, factory ) {
         'base',
         'mediator',
         'file'
-    ], function( Base, Mediator, WUFile ) {
+    ], function (Base, Mediator, WUFile) {
     
         var $ = Base.$,
             STATUS = WUFile.Status;
@@ -2601,7 +2601,7 @@ module.exports = (function( root, factory ) {
             this._map = {};
         }
     
-        $.extend( Queue.prototype, {
+        $.extend(Queue.prototype, {
     
             /**
              * 将新文件加入对队列尾部
@@ -2609,9 +2609,9 @@ module.exports = (function( root, factory ) {
              * @method append
              * @param  {File} file   文件对象
              */
-            append: function( file ) {
-                this._queue.push( file );
-                this._fileAdded( file );
+            append: function (file) {
+                this._queue.push(file);
+                this._fileAdded(file);
                 return this;
             },
     
@@ -2621,9 +2621,9 @@ module.exports = (function( root, factory ) {
              * @method prepend
              * @param  {File} file   文件对象
              */
-            prepend: function( file ) {
-                this._queue.unshift( file );
-                this._fileAdded( file );
+            prepend: function (file) {
+                this._queue.unshift(file);
+                this._fileAdded(file);
                 return this;
             },
     
@@ -2634,11 +2634,11 @@ module.exports = (function( root, factory ) {
              * @param  {String} fileId   文件ID
              * @return {File}
              */
-            getFile: function( fileId ) {
-                if ( typeof fileId !== 'string' ) {
+            getFile: function (fileId) {
+                if (typeof fileId !== 'string') {
                     return fileId;
                 }
-                return this._map[ fileId ];
+                return this._map[fileId];
             },
     
             /**
@@ -2648,16 +2648,16 @@ module.exports = (function( root, factory ) {
              * @param {String} status [文件状态值](#WebUploader:File:File.Status)
              * @return {File} [File](#WebUploader:File)
              */
-            fetch: function( status ) {
+            fetch: function (status) {
                 var len = this._queue.length,
                     i, file;
     
                 status = status || STATUS.QUEUED;
     
-                for ( i = 0; i < len; i++ ) {
-                    file = this._queue[ i ];
+                for (i = 0; i < len; i++) {
+                    file = this._queue[i];
     
-                    if ( status === file.getStatus() ) {
+                    if (status === file.getStatus()) {
                         return file;
                     }
                 }
@@ -2671,9 +2671,9 @@ module.exports = (function( root, factory ) {
              * @method sort
              * @param {Function} fn 排序方法
              */
-            sort: function( fn ) {
-                if ( typeof fn === 'function' ) {
-                    this._queue.sort( fn );
+            sort: function (fn) {
+                if (typeof fn === 'function') {
+                    this._queue.sort(fn);
                 }
             },
     
@@ -2683,21 +2683,21 @@ module.exports = (function( root, factory ) {
              * @method getFiles
              * @param {String} [status] [文件状态值](#WebUploader:File:File.Status)
              */
-            getFiles: function() {
-                var sts = [].slice.call( arguments, 0 ),
+            getFiles: function () {
+                var sts = [].slice.call(arguments, 0),
                     ret = [],
                     i = 0,
                     len = this._queue.length,
                     file;
     
-                for ( ; i < len; i++ ) {
-                    file = this._queue[ i ];
+                for (; i < len; i++) {
+                    file = this._queue[i];
     
-                    if ( sts.length && !~$.inArray( file.getStatus(), sts ) ) {
+                    if (sts.length && !~$.inArray(file.getStatus(), sts)) {
                         continue;
                     }
     
-                    ret.push( file );
+                    ret.push(file);
                 }
     
                 return ret;
@@ -2709,38 +2709,52 @@ module.exports = (function( root, factory ) {
              * @method removeFile
              * @param {File} 文件对象。
              */
-            removeFile: function( file ) {
+            removeFile: function (file) {
                 var me = this,
-                    existing = this._map[ file.id ];
+                    existing = this._map[file.id];
     
-                if ( existing ) {
-                    delete this._map[ file.id ];
+                if (existing) {
+                    delete this._map[file.id];
                     this._delFile(file);
                     file.destroy();
                     this.stats.numofDeleted++;
-                    
+    
                 }
             },
     
-            _delFile : function(file){
-                for(var i = this._queue.length - 1 ; i >= 0 ; i-- ){
-                    if(this._queue[i] == file){
-                        this._queue.splice(i,1); 
+    
+            _fileAdded: function (file) {
+                var me = this,
+                    existing = this._map[file.id];
+    
+                if (!existing) {
+                    this._map[file.id] = file;
+    
+                    file.on('statuschange', function (cur, pre) {
+                        me._onFileStatusChange(cur, pre);
+                    });
+                }
+            },
+    
+            _delFile: function (file) {
+                for (var i = this._queue.length - 1; i >= 0; i--) {
+                    if (this._queue[i] == file) {
+                        this._queue.splice(i, 1);
                         break;
                     }
                 }
             },
     
-            _onFileStatusChange: function( curStatus, preStatus ) {
+            _onFileStatusChange: function (curStatus, preStatus) {
                 var stats = this.stats;
     
-                switch ( preStatus ) {
+                switch (preStatus) {
                     case STATUS.PROGRESS:
                         stats.numOfProgress--;
                         break;
     
                     case STATUS.QUEUED:
-                        stats.numOfQueue --;
+                        stats.numOfQueue--;
                         break;
     
                     case STATUS.ERROR:
@@ -2756,7 +2770,7 @@ module.exports = (function( root, factory ) {
                         break;
                 }
     
-                switch ( curStatus ) {
+                switch (curStatus) {
                     case STATUS.QUEUED:
                         stats.numOfQueue++;
                         break;
@@ -2790,7 +2804,7 @@ module.exports = (function( root, factory ) {
     
         });
     
-        Mediator.installTo( Queue.prototype );
+        Mediator.installTo(Queue.prototype);
     
         return Queue;
     });
@@ -4889,26 +4903,26 @@ module.exports = (function( root, factory ) {
     define('runtime/html5/filepicker',[
         'base',
         'runtime/html5/runtime'
-    ], function( Base, Html5Runtime ) {
+    ], function (Base, Html5Runtime) {
     
         var $ = Base.$;
     
-        return Html5Runtime.register( 'FilePicker', {
-            init: function() {
+        return Html5Runtime.register('FilePicker', {
+            init: function () {
                 var container = this.getRuntime().getContainer(),
                     me = this,
                     owner = me.owner,
                     opts = me.options,
-                    label = this.label = $( document.createElement('label') ),
-                    input =  this.input = $( document.createElement('input') ),
+                    label = this.label = $(document.createElement('label')),
+                    input = this.input = $(document.createElement('input')),
                     arr, i, len, mouseHandler, changeHandler;
     
-                input.attr( 'type', 'file' );
-                input.attr( 'capture', 'camera');
-                input.attr( 'name', opts.name );
+                input.attr('type', 'file');
+                input.attr('capture', 'camera');
+                input.attr('name', opts.name);
                 input.addClass('webuploader-element-invisible');
     
-                label.on( 'click', function(e) {
+                label.on('click', function (e) {
                     input.trigger('click');
                     e.stopPropagation();
                     owner.trigger('dialogopen');
@@ -4923,33 +4937,34 @@ module.exports = (function( root, factory ) {
                     background: '#ffffff'
                 });
     
-                if ( opts.multiple ) {
-                    input.attr( 'multiple', 'multiple' );
+                if (opts.multiple) {
+                    input.attr('multiple', 'multiple');
                 }
     
                 // @todo Firefox不支持单独指定后缀
-                if ( opts.accept && opts.accept.length > 0 ) {
+                if (opts.accept && opts.accept.length > 0) {
                     arr = [];
     
-                    for ( i = 0, len = opts.accept.length; i < len; i++ ) {
-                        arr.push( opts.accept[ i ].mimeTypes );
+                    for (i = 0, len = opts.accept.length; i < len; i++) {
+                        arr.push(opts.accept[i].mimeTypes);
                     }
     
-                    input.attr( 'accept', arr.join(',') );
+                    input.attr('accept', arr.join(','));
                 }
     
-                container.append( input );
-                container.append( label );
+                container.append(input);
+                container.append(label);
     
-                mouseHandler = function( e ) {
-                    owner.trigger( e.type );
+                mouseHandler = function (e) {
+                    owner.trigger(e.type);
                 };
     
-                changeHandler = function( e ) {
+                changeHandler = function (e) {
+                    //
                     var clone;
     
                     // 解决chrome 56 第二次打开文件选择器，然后点击取消，依然会触发change事件的问题
-                    if (e.target.files.length === 0){
+                    if (e.target.files.length === 0) {
                         return false;
                     }
     
@@ -4958,27 +4973,27 @@ module.exports = (function( root, factory ) {
     
     
                     // reset input
-                    clone = this.cloneNode( true );
+                    clone = this.cloneNode(true);
                     clone.value = null;
-                    this.parentNode.replaceChild( clone, this );
+                    this.parentNode.replaceChild(clone, this);
     
                     input.off();
-                    input = $( clone ).on( 'change', fn )
-                            .on( 'mouseenter mouseleave', mouseHandler );
+                    input = $(clone).on('change', changeHandler)
+                        .on('mouseenter mouseleave', mouseHandler);
     
                     owner.trigger('change');
                 }
-                input.on( 'change', changeHandler);
-                label.on( 'mouseenter mouseleave', mouseHandler );
+                input.on('change', changeHandler);
+                label.on('mouseenter mouseleave', mouseHandler);
     
             },
     
     
-            getFiles: function() {
+            getFiles: function () {
                 return this.files;
             },
     
-            destroy: function() {
+            destroy: function () {
                 this.input.off();
                 this.label.off();
             }
