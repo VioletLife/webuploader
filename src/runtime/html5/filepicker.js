@@ -61,6 +61,7 @@ define([
             };
 
             changeHandler = function (e) {
+                //
                 var clone, fn = arguments.callee;
 
                 // 解决chrome 56 第二次打开文件选择器，然后点击取消，依然会触发change事件的问题
